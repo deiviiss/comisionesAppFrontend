@@ -1,26 +1,25 @@
-import { useFacturas } from '@context/ProviderFactura';
+import dayjs from 'dayjs'
+import { usePedidos } from '@context/ProviderPedido';
 import { useRouter } from 'next/router';
-import moment from 'moment'
 import 'moment/locale/es'
 import toast from 'react-hot-toast';
-import { LoginIcon } from '@heroicons/react/solid';
 
-export default function Card({ factura }) {
+export default function CardPedido({ pedido }) {
 
   const router = useRouter();
 
-  const { deleteFactura } = useFacturas();
+  const { deletePedido } = usePedidos();
 
-  const handleDelete = (facturaId) => {
+  const handleDelete = (pedidoId, folio) => {
 
     toast((t) => (
       <div>
-        <p className='text-white py-3'>¿Seguro que quieres borrar la <strong>factura {facturaId}</strong> ?</p>
+        <p className='text-white py-3'>¿Seguro que quieres borrar el Pedido con folio <strong>{folio}</strong>?</p>
 
         <div className='flex items-center justify-between'>
           <button className="bg-red-600 hover:bg-red-500  text-white px-3 py-2 rounded-sm mx-2"
             onClick={() => {
-              deleteFactura(facturaId)
+              deletePedido(pedidoId)
               toast.dismiss(t.id)
             }}
           >Borrar</button>
@@ -38,43 +37,56 @@ export default function Card({ factura }) {
 
   }
 
+  // formater modeda
   let formatterPeso = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
   })
 
-  let comision = formatterPeso.format(factura.cantidad * .05)
+  let comision = formatterPeso.format(pedido.pedido * .03)
 
-  let cantidadPesos = formatterPeso.format(factura.cantidad)
+  let pedidoPesos = formatterPeso.format(pedido.pedido)
 
-  let createAt = moment(`${factura.createAt}`).local('es').format('LL');
-  let rememberAt = moment(`${factura.rememberAt}`).local('es').format('LL');
-  console.log(factura.customer[0]);
+  if (pedido.factura != null) {
+    let facturaPesos = formatterPeso.format(pedido.facturado)
+
+  } else {
+    let facturaPesos = 'No facturado'
+
+  }
+
+  let facturaPesos = formatterPeso.format(pedido.facturado)
+
+  // format date DD/MM/YYYY
+  let createAt = dayjs(pedido.createAt).format('DD/MM/YYYY');
+
+  let rememberAt = dayjs(dayjs(pedido.rememberAt).add(1, 'day')).format('DD/MM/YYYY');
+
   return (
     <>
       <div className="bg-primary text-white rounded shadow-md shadow-black hover:bg-secondary hover:cursor-pointer"
-        onClick={() => { router.push(`/facturas/edit/${factura._id}`); }}
+        onClick={() => { router.push(`/pedidos/edit/${pedido._id}`); }}
       >
         <div className="px-4 py-4">
 
           <div className="flex justify-between pb-4">
-            <h2 className='Card-title text-white'>Factura {factura.folio}</h2>
+            <h2 className='Card-title text-white'>Pedido {pedido.folio}</h2>
             <button className="bg-red-600 hover:bg-red-500 text-sm px-2 py-1 rounded-sm"
               onClick={(e) => {
                 e.stopPropagation();
-                handleDelete(factura._id)
+                handleDelete(pedido._id, pedido.folio)
               }}
             >Borrar</button>
           </div>
           <div className="grid grid-cols-2 gap-x-0 gap-y-1">
             <p><strong>Cliente</strong></p>
-            <p>{factura.customer[0]?.nameCustomer} {factura.customer[0]?.lastName}</p>
-            <p><strong>Cantidad:</strong></p><p>{cantidadPesos}</p>
+            <p>{pedido.customer[0]?.nameCustomer} {pedido.customer[0]?.lastName}</p>
+            <p><strong>Cantidad pedido:</strong></p><p>{pedidoPesos}</p>
             <p><strong>Comisión:</strong></p><p>{comision}</p>
-            <p><strong>Status:</strong></p><p>{factura.status}</p>
+            <p><strong>Cantidad factura:</strong></p><p>{facturaPesos}</p>
+            <p><strong>Status:</strong></p><p>{pedido.status}</p>
             <p><strong>Creada:</strong></p><p>{createAt}</p>
             <p><strong>Recordatorio:</strong></p><p>{rememberAt}</p>
-            <p><strong>Actualizo:</strong></p><p>{factura.user[0]?.name}</p>
           </div>
 
         </div>

@@ -1,15 +1,15 @@
 import '../styles/tailwind.css'
 import { Toaster } from 'react-hot-toast';
-import { ProviderFactura } from '../context/ProviderFactura';
+import { ProviderPedido } from '../context/ProviderPedido';
 import { ProviderAuth } from '../context/ProviderAuth'
 
 function MyApp({ Component, pageProps }) {
   return (
     <ProviderAuth>
-      <ProviderFactura>
+      <ProviderPedido>
         <Component {...pageProps} />
         <Toaster />
-      </ProviderFactura>
+      </ProviderPedido>
     </ProviderAuth>
   )
 }

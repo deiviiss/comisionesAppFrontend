@@ -1,53 +1,52 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useFacturas } from '@context/ProviderFactura';
+import { usePedidos } from '@context/ProviderPedido';
 import { useAuth } from '@context/ProviderAuth';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { StopIcon } from '@heroicons/react/outline'
 
-export default function FormFactura({ setOpen }) {
+export default function FormPedido({ setOpen }) {
   const { users } = useAuth();
-  const { customers } = useFacturas()
+  const { customers } = usePedidos()
 
-  const { addFactura, getFactura, updateFactura } = useFacturas();
-  // default factura
-  const [factura, setFactura] = useState({
+  const { addPedido, getPedido, updatePedido } = usePedidos();
+  // default pedido
+  const [pedido, setPedido] = useState({
     folio: '',
-    remember: '',
-    customer: '', //! traer a los customer
-    user: users[0]._id,//! usuario de sesión
+    pedido: '',
+    facturado: '',
     notes: '',
-    cantidad: ''
+    rememberAt: '',
+    user: users[0]._id,//! usuario de sesión
+    customer: '', //! traer a los customers en select array
   });
 
   const router = useRouter();
-  // if (!router.isReady) return;
+  if (!router.isReady) return;
 
   const params = router.query;
 
   useEffect(() => {
     if (params.id) {
       (async () => {
-        const data = await getFactura(params.id)
-        setFactura(data)
+
+        const data = await getPedido(params.id)
+
+        setPedido(data)
       })();
     }
   }, [params.id])
 
-  // close modal, redirect to posts list
-  // after save post on state, redirect to posts list
-
   // component title modal
   const HeaderForm = (id) => {
     if (id) {
-
       return (
         <header className='flex justify-between items-center py-4 text-white'>
-          <h3 className='text-xl'>Factura</h3>
+          <h3 className='text-xl'>Pedido</h3>
 
-          <Link href={'/facturas'} className='text-gray-400 text-sm hover:text-gray-400'>Atrás</Link>
+          <Link href={'/pedidos'} className='text-gray-400 text-sm hover:text-gray-400'>Atrás</Link>
         </header>
       )
     }
@@ -55,20 +54,20 @@ export default function FormFactura({ setOpen }) {
 
   // component error
   const pError = (name) => {
-
     return (
       <ErrorMessage component='p' className='text-red-600 text-sm' name={name} />
     )
   }
-  console.log(customers);
 
   // component select
   const selectInput = (data, field) => {
     return (
-      <div className="inline-block relative w-64">
+      <div className="inline-block relative w-full">
         <Field component='select' name={field} className="px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900">
-          <option>Selecciona un cliente</option>
-          {data.map((item) => (<option value={item._id} key={`Customer-${item._id}`}>{item.nameCustomer}</option>))}
+          {
+            params.id ? (<option value={pedido.customer[0]?._id}>{pedido.customer[0]?.nameCustomer} {pedido.customer[0]?.lastName}</option>) : <option>Selecciona un cliente</option>
+          }
+          {data.map((item) => (<option value={item._id} key={`Customer-${item._id}`}>{item.nameCustomer} {item.lastName}</option>))}
         </Field>
       </div>
     )
@@ -82,25 +81,24 @@ export default function FormFactura({ setOpen }) {
 
           <Formik
 
-            initialValues={factura}
+            initialValues={pedido}
 
             validationSchema={Yup.object({
               folio: Yup.string().required('Ingresa el folio'),
-              remember: Yup.string().required('Ingresa el recordatorio'),
-              customer: Yup.string().required('Ingresa al cliente'),
-              notes: Yup.string().required('Ingresa alguna observación'),
-              cantidad: Yup.number().required('Ingresa la cantidad'),
+              rememberAt: Yup.date().required('Ingresa el recordatorio'),
+              pedido: Yup.number().required('Ingresa la cantidad del pedido'),
             })}
 
             // send form
             onSubmit={(values, actions) => {
 
               if (params.id) {
-                updateFactura(params.id, values);
-                router.push(`/facturas`);
+                updatePedido(params.id, values);
+
+                router.push(`/pedidos`);
               } else {
                 // on context
-                addFactura(values);
+                addPedido(values);
                 setOpen(false);
               }
 
@@ -118,10 +116,15 @@ export default function FormFactura({ setOpen }) {
                   name='folio' placeolder='Ingresa folio' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
                 {pError('folio')}
 
-                <label htmlFor='cantidad' className='text-sm block font-bold text-primary pt-2 pb-1'>Cantidad</label>
+                <label htmlFor='pedido' className='text-sm block font-bold text-primary pt-2 pb-1'>Importe del pedido</label>
                 <Field
-                  name='cantidad' placeolder='Ingresa cantidad' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
-                {pError('cantidad')}
+                  name='pedido' placeolder='Ingresa cantidad del pedido' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
+                {pError('pedido')}
+
+                <label htmlFor='facturado' className='text-sm block font-bold text-primary pt-2 pb-1'>Importe de la factura</label>
+                <Field
+                  name='facturado' placeolder='Ingresa cantidad de la factura' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
+                {pError('factura')}
 
                 <label htmlFor='customer' className='text-sm block font-bold text-primary pt-2 pb-1'>Cliente</label>
 
@@ -130,8 +133,9 @@ export default function FormFactura({ setOpen }) {
 
                 <label htmlFor='remember' className='text-sm block font-bold text-primary pt-2 pb-1'>Recordatorio</label>
                 <Field
-                  name='remember' placeolder='Ingresa recordatorio' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
-                {pError('remember')}
+                  type='date'
+                  name='rememberAt' placeolder='Ingresa recordatorio' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
+                {pError('rememberAt')}
 
                 <label htmlFor='notes' className='text-sm block font-bold text-primary pt-2 pb-1'>Observaciones</label>
                 <Field

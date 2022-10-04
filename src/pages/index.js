@@ -6,7 +6,7 @@ export default function Home() {
     <div >
       <Head>
         <title>Comisiones App</title>
-        <meta name="description" content="Manejo y control de comisiones en facturas" />
+        <meta name="description" content="Manejo y control de comisiones en pedidos" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -20,21 +20,15 @@ export default function Home() {
         </p>
 
         <div className='Grid'>
-          <a className='Card' href="/facturas">
-            <h2>Facturas &rarr;</h2>
-            <p>Agregar, editar, eliminar facturas</p>
+          <a className='Card' href="/pedidos">
+            <h2>Pedidos &rarr;</h2>
+            <p>Agregar, editar, eliminar pedidos</p>
           </a>
 
           <a className='Card' href="/customers">
             <h2>Clientes &rarr;</h2>
             <p>Agregar, editar, eliminar clientes</p>
           </a>
-
-          <a className='Card' href="/users">
-            <h2>Usuarios &rarr;</h2>
-            <p>Agregar, editar, eliminar usuarios</p>
-          </a>
-
 
         </div>
       </main>

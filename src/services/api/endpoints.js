@@ -3,16 +3,16 @@ const API = process.env.NEXT_PUBLIC_API_URL;
 const VERSION = process.env.NEXT_PUBLIC_API_VERSION;
 
 const endPoints = {
-  facturas: {
-    getFacturas: () => {
-      return `${API}/api/${VERSION}/facturas`
+  pedidos: {
+    getPedidos: () => {
+      return `${API}/api/${VERSION}/pedidos`
     },
-    getFactura: (id) => {
-      return `${API}/api/${VERSION}/facturas/${id}`
+    getPedido: (id) => {
+      return `${API}/api/${VERSION}/pedidos/${id}`
     },
-    addFactura: `${API}/api/${VERSION}/facturas`,
-    updateFactura: (id) => `${API}/api/${VERSION}/facturas/${id}`,
-    deleteFactura: (id) => `${API}/api/${VERSION}/facturas/${id}`
+    addPedido: `${API}/api/${VERSION}/pedidos`,
+    updatePedido: (id) => `${API}/api/${VERSION}/pedidos/${id}`,
+    deletePedido: (id) => `${API}/api/${VERSION}/pedidos/${id}`
   },
   customers: {
     getCustomers: () => {
