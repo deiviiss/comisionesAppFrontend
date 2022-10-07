@@ -43,17 +43,11 @@ export default function CardPedido({ pedido }) {
     currency: 'USD'
   })
 
-  let comision = formatterPeso.format(pedido.pedido * .03)
+  let comisionPedido = formatterPeso.format(pedido.pedido * .03)
 
   let pedidoPesos = formatterPeso.format(pedido.pedido)
 
-  if (pedido.factura != null) {
-    let facturaPesos = formatterPeso.format(pedido.facturado)
-
-  } else {
-    let facturaPesos = 'No facturado'
-
-  }
+  let comisionFactura = formatterPeso.format(pedido.facturado * .03)
 
   let facturaPesos = formatterPeso.format(pedido.facturado)
 
@@ -82,8 +76,9 @@ export default function CardPedido({ pedido }) {
             <p><strong>Cliente</strong></p>
             <p>{pedido.customer[0]?.nameCustomer} {pedido.customer[0]?.lastName}</p>
             <p><strong>Cantidad pedido:</strong></p><p>{pedidoPesos}</p>
-            <p><strong>Comisión:</strong></p><p>{comision}</p>
+            <p><strong>Comisión:</strong></p><p>{comisionPedido}</p>
             <p><strong>Cantidad factura:</strong></p><p>{facturaPesos}</p>
+            <p><strong>Comision factura:</strong></p><p>{comisionFactura}</p>
             <p><strong>Status:</strong></p><p>{pedido.status}</p>
             <p><strong>Creada:</strong></p><p>{createAt}</p>
             <p><strong>Recordatorio:</strong></p><p>{rememberAt}</p>

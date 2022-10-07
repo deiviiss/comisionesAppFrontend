@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { usePedidos } from '@context/ProviderPedido';
+import { useCustomers } from '@context/ProviderCustomer'
 import { useAuth } from '@context/ProviderAuth';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { StopIcon } from '@heroicons/react/outline'
 
-export default function FormPedido({ setOpen }) {
+export default function FormPedido({ setOpen, customerId }) {
   const { users } = useAuth();
-  const { customers } = usePedidos()
 
   const { addPedido, getPedido, updatePedido } = usePedidos();
   // default pedido
@@ -20,7 +20,7 @@ export default function FormPedido({ setOpen }) {
     notes: '',
     rememberAt: '',
     user: users[0]._id,//! usuario de sesión
-    customer: '', //! traer a los customers en select array
+    customer: customerId,
   });
 
   const router = useRouter();
@@ -59,19 +59,6 @@ export default function FormPedido({ setOpen }) {
     )
   }
 
-  // component select
-  const selectInput = (data, field) => {
-    return (
-      <div className="inline-block relative w-full">
-        <Field component='select' name={field} className="px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900">
-          {
-            params.id ? (<option value={pedido.customer[0]?._id}>{pedido.customer[0]?.nameCustomer} {pedido.customer[0]?.lastName}</option>) : <option>Selecciona un cliente</option>
-          }
-          {data.map((item) => (<option value={item._id} key={`Customer-${item._id}`}>{item.nameCustomer} {item.lastName}</option>))}
-        </Field>
-      </div>
-    )
-  }
   return (
     <>
       <div className="flex items-center justify-center">
@@ -99,7 +86,9 @@ export default function FormPedido({ setOpen }) {
               } else {
                 // on context
                 addPedido(values);
+
                 setOpen(false);
+                router.push(`/pedidos`);
               }
 
               actions.setSubmitting(false)
@@ -125,11 +114,6 @@ export default function FormPedido({ setOpen }) {
                 <Field
                   name='facturado' placeolder='Ingresa cantidad de la factura' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
                 {pError('factura')}
-
-                <label htmlFor='customer' className='text-sm block font-bold text-primary pt-2 pb-1'>Cliente</label>
-
-                {selectInput(customers, 'customer')}
-                {pError('customer')}
 
                 <label htmlFor='remember' className='text-sm block font-bold text-primary pt-2 pb-1'>Recordatorio</label>
                 <Field

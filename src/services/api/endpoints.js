@@ -23,7 +23,10 @@ const endPoints = {
     },
     addCustomer: `${API}/api/${VERSION}/customers`,
     updateCustomer: (id) => `${API}/api/${VERSION}/customers/${id}`,
-    deleteCustomer: (id) => `${API}/api/${VERSION}/customers/${id}`
+    deleteCustomer: (id) => `${API}/api/${VERSION}/customers/${id}`,
+    filterCustomers: (filter) => {
+      return `${API}/api/${VERSION}/customers/filter?nameCustomer=${filter}`
+    },
   }
 }
 

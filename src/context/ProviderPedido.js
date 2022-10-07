@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
 import { useState, createContext, useContext, useEffect } from 'react';
-import { addPedidoRequest, getPedidosRequest, deletePedidoRequest, getPedidoRequest, updatePedidoRequest } from '@services/api/PedidosRequest';
-import { getCustomersRequest } from '@services/api/customerRequest'
+import { addPedidoRequest, getPedidosRequest, deletePedidoRequest, getPedidoRequest, updatePedidoRequest } from '@services/api/pedidosRequests';
+import { getCustomersRequest } from '@services/api/customerRequests'
 import { useAuth } from '@context/ProviderAuth'
+import { useCustomers } from '@context/ProviderCustomer'
 
 // container pedido context
 const PedidoContext = createContext();
@@ -18,6 +19,7 @@ export const usePedidos = () => {
 export const ProviderPedido = ({ children }) => {
   // use users
   const { users } = useAuth()
+  const { customers } = useCustomers();
 
   // pedidos
   const [pedidos, setPedidos] = useState([]);
@@ -29,20 +31,19 @@ export const ProviderPedido = ({ children }) => {
     setPedidos(response.body);
   }
 
-  // customers
-  const [customers, setCustomer] = useState([])
+  // // customers
+  // const [customers, setCustomer] = useState([])
 
   // save state customers
-  const getCustomers = async () => {
-    const response = await getCustomersRequest();
+  // const getCustomers = async () => {
+  //   const response = await getCustomersRequest();
 
-    setCustomer(response.body);
-  }
+  //   setCustomer(response.body);
+  // }
 
   // onload page
   useEffect(() => {
     getPedidos()
-    getCustomers()
   }, [])
 
   // add pedido

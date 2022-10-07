@@ -1,5 +1,5 @@
 import axios from 'axios';
-import endPoints from '../api/endpoints';
+import endPoints from './endpoints';
 
 const getCustomersRequest = async () => {
   const config = {
@@ -49,9 +49,23 @@ const getCustomerRequest = async (customerId) => {
 
 const updateCustomerRequest = async (customerId, changes) => {
   // request axios endpoints diccionary
-  const response = await axios.put(endPoints.customers.updateCustomer(customerId), changes);
+  const response = await axios.patch(endPoints.customers.updateCustomer(customerId), changes);
 
   return response.data;
 }
 
-export { getCustomersRequest, addCustomerRequest, deleteCustomerRequest, updateCustomerRequest, getCustomerRequest }
+const filterCustomersRequest = async (filter) => {
+  const config = {
+    headers: {
+      accept: '*/*',
+      'Content-Type': 'application/json'
+    },
+  };
+
+  // request axios endpoints diccionary
+  const response = await axios.get(endPoints.customers.filterCustomers(filter), config)
+
+  return response.data;
+}
+
+export { getCustomersRequest, addCustomerRequest, deleteCustomerRequest, updateCustomerRequest, getCustomerRequest, filterCustomersRequest }
