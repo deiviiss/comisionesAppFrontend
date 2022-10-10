@@ -25,7 +25,7 @@ export default function Modal({ open, setOpen, children, title }) {
           >
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full w-full">
               <div className="bg-gray-50 px-4 py-3 sm:px-6 flex justify-between">
-                <h3 className="text-xl">{title}</h3>
+                <h3 className="text-xl text-primary">{title}</h3>
                 <XCircleIcon className="flex-shrink-0 h-6 w-6 text-gray-400 cursor-pointer" aria-hidden="true" onClick={() => setOpen(false)} ref={cancelButtonRef} />
               </div>
               <div className="bg-white px-4 pt-0 pb-4 sm:p-1 sm:pb-4">

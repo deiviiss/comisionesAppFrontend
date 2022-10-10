@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useCustomers } from '@context/ProviderCustomer';
-// import { useAuth } from '@context/ProviderAuth';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { StopIcon } from '@heroicons/react/outline'
@@ -14,9 +13,14 @@ export default function FormCustomer({ setOpen }) {
   const [customer, setCustomer] = useState({
     nameCustomer: '',
     email: '',
-    direction: '',
+    celular: '',
     telefono: '',
   });
+
+  // Warning: `value` prop on `input` should not be null.
+  if (!customer.telefono) {
+    customer.telefono = ''
+  }
 
   const router = useRouter();
   if (!router.isReady) return;
@@ -67,9 +71,7 @@ export default function FormCustomer({ setOpen }) {
 
             validationSchema={Yup.object({
               nameCustomer: Yup.string().required('Escribe un nombre para el cliente'),
-              email: Yup.string().required('Escribe el correo del cliente'),
-              telefono: Yup.number().required('Escribe el teléfono del cliente'),
-              direction: Yup.string().required('Escribe la dirección del cliente'),
+              celular: Yup.number().required('Escribe el celular del cliente'),
             })}
 
             // send form
@@ -96,23 +98,29 @@ export default function FormCustomer({ setOpen }) {
               <Form onSubmit={handleSubmit}>
                 <label htmlFor='nameCustomer' className='text-sm block font-bold text-primary pt-2 pb-1'>Nombre del cliente</label>
                 <Field
-                  name='nameCustomer' placeolder='Ferretera' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
+                  name='nameCustomer' placeolder='Ferretera'
+                  autoComplete="off"
+                  className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
                 {pError('nameCustomer')}
 
                 <label htmlFor='email' className='text-sm block font-bold text-primary pt-2 pb-1'>Correo electrónico</label>
                 <Field
-                  name='email' placeolder='ferretera@mail.com' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
-                {pError('email')}
+                  name='email'
+                  autoComplete="off"
+                  placeolder='ferretera@mail.com' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
 
-                <label htmlFor='direction' className='text-sm block font-bold text-primary pt-2 pb-1'>Dirección</label>
+                <label htmlFor='celular' className='text-sm block font-bold text-primary pt-2 pb-1'>Celular</label>
                 <Field
-                  name='direction' placeolder='Calle, Avenida ...' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
-                {pError('direction')}
+                  name='celular' placeolder='9811291234'
+                  autoComplete="off"
+                  className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
+                {pError('celular')}
 
                 <label htmlFor='telefono' className='text-sm block font-bold text-primary pt-2 pb-1'>Teléfono</label>
                 <Field
-                  name='telefono' placeolder='9811291234' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
-                {pError('telefono')}
+                  name='telefono'
+                  autoComplete="off"
+                  placeolder='9811291234' className='px-3 py-2 focus:outline-none rounded text-primary w-full border-solid border-2 border-sky-900' />
 
                 <div className="flex justify-center py-4">
                   <button type='submit' className='bg-primary hover:bg-secondary px-4 py-2 rounded mt-2 text-white focus:outline-none disable:bg-indigo-400'

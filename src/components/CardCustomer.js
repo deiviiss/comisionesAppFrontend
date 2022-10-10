@@ -30,11 +30,12 @@ export default function CardCustomer({ customer }) {
               }}
             >Editar</button>
           </div>
-          <div className="grid grid-cols-2 gap-x-0 gap-y-1">
+          {/* <div className="grid grid-cols-2 gap-x-0 gap-y-1"> */}
 
-            <p><strong>Teléfono:</strong></p><p>{customer.telefono}</p>
+          <div className="grid grid-cols-[100px,1fr] gap-x-0 gap-y-1">
             <p><strong>Email:</strong></p><p>{customer.email}</p>
-            <p><strong>Dirección:</strong></p><p>{customer.direction}</p>
+            <p><strong>Celular:</strong></p>{customer.celular}
+            <p><strong>Teléfono:</strong></p><p>{customer.telefono}</p>
           </div>
 
         </div>
